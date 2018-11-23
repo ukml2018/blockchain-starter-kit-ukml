@@ -3,6 +3,15 @@
 * @param {org.example.mynetwork.updatepipeTransaction} txParms
 * @transaction
 */
+/*eslint "require-jsdoc": ["error", {
+    "require": {
+        "FunctionDeclaration": true,
+        "MethodDefinition": true,
+        "ClassDeclaration": true,
+        "ArrowFunctionExpression": true,
+        "FunctionExpression": true
+    }
+}]*/
 /*eslint strict: [2, "never"]*/
 async function updpipeTxfn(txParms) {
     console.log('Here1');
