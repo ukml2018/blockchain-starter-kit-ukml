@@ -3,7 +3,7 @@
 * @transaction
 */
 /*eslint strict: [2, "never"]*/
-function updpipeTxfn(txParms) {
+async function updpipeTxfn(txParms) {
     console.log('Here1');
     // Save the old value of the pipe.
     const oldLat = txParms.pipe.latitude;
