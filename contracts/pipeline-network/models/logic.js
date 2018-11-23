@@ -1,7 +1,7 @@
+/*eslint strict: [2, "never"]*/
 /**
 * @param {org.example.mynetwork.updatepipeTransaction} txParms -- Pipe transaction to be added
 * @transaction
-* eslint strict: [2, "never"]
 */
 async function updpipeTxfn(txParms) {
     console.log('Here1');
