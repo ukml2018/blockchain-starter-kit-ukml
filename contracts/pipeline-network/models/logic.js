@@ -3,8 +3,8 @@
 * @param {org.example.mynetwork.updatepipeTransaction} txParms
 * @transaction
 */
+/*eslint strict: [2, "never"]*/
 async function updpipeTxfn(txParms) {
-"use strict";
 console.log('Here1');
 // Save the old value of the pipe.
 const oldLat = txParms.pipe.latitude;
