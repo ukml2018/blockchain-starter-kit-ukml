@@ -1,0 +1,49 @@
+/**
+ * My commodity trading network
+ */
+namespace org.example.mynetwork
+asset pipeLocate identified by pipeId {
+  o String pipeId
+  --> pipeAsset asset
+  o String work_order_no
+  o String point_type
+  o String entity_name
+  o String latitude
+  o String longitude
+  o String insert_timestamp
+}
+asset pipeAsset identified by assetId {
+  o String assetId
+  --> pipeParticipant owner
+  o String Street_prefix
+  o String Street_Name
+  o String Street_type
+  o String street_suffix
+  o String city
+  o String state
+  o String Country
+}
+
+participant pipeParticipant identified by participantId {
+  o String participantId
+  o String firstName
+  o String lastName
+  o String House_no
+}
+
+transaction updatepipeTransaction {
+  --> pipeLocate pipe
+  o String newLatitude
+  o String newLongitude
+  o String newInsert_timestamp
+}
+
+event SampleEvent {
+  o String pipeId
+  o String oldLatitude
+  o String oldLongitude
+  o String oldInsert_timestamp
+  o String newLatitude
+  o String newLongitude
+  o String newInsert_timestamp
+}

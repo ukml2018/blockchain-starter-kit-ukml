@@ -1,0 +1,30 @@
+/** Sample queries 
+*/
+
+query selectAllHouses {
+  description: "Select all Houses"
+  statement:
+      SELECT org.example.mynetwork.pipeAsset
+}
+
+query selectAllPipes {
+  description: "Select all Pipes"
+  statement:
+      SELECT org.example.mynetwork.pipeLocate
+}
+
+query selectAllParticipants {
+  description: "Select all Participants"
+  statement:
+      SELECT org.example.mynetwork.pipeParticipant
+}
+
+
+
+query selectPipeLocByPipeId {
+  description: "selectPipeLocByPipeId"
+  statement:
+      SELECT org.example.mynetwork.pipeLocate
+          WHERE (pipeId == _$pipeIdinput)
+}
+
