@@ -3,13 +3,12 @@
     "composer": "^0.20.4"
   },
   "name": "pipeline-network",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "description",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/pipeline-network.bna",
     "pretest": "npm run lint",
-    "lint": "eslint .",
-    "test": "nyc mocha -t 0 test/*.js && cucumber-js"
+    "lint": "eslint ."
   },
   "keywords": [
     "composer",
