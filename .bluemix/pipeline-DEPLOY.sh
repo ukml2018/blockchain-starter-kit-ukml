@@ -112,7 +112,14 @@ function deploy_fabric_contract {
     do
         CHAINCODE_FILE_OPTS="${CHAINCODE_FILE_OPTS} -F files[]=@${CHAINCODE_FILE}"
     done
-
+    if ! OUTPUT=$(do_curl -k -X POST -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${CHAINCODE_FILE_OPTS} -F chaincode_id=${CHAINCODE_ID} -F chaincode_version=${CHAINCODE_VERSION} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/chaincode/install)
+    then
+        if [[ "${OUTPUT}" != *"chaincode code"*"exists"* ]]
+        then
+            echo failed to install fabric contract ${CONTRACT}
+            exit 1
+        fi
+    fi
     cat << EOF > request.json
 {
     "chaincode_id": "${CHAINCODE_ID}",
@@ -120,6 +127,22 @@ function deploy_fabric_contract {
     "chaincode_arguments": "[\"12345\"]"
 }
 EOF
+    while ! OUTPUT=$(do_curl -k -X POST -H 'Content-Type: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} --data-binary @request.json ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/channels/${CHANNEL}/chaincode/instantiate)
+    do
+        if [[ "${OUTPUT}" = *"Failed to establish a backside connection"* ]]
+        then
+            sleep 30
+        elif [[ "${OUTPUT}" = *"premature execution"* ]]
+        then
+            sleep 30
+        elif [[ "${OUTPUT}" = *"version already exists for chaincode"* ]]
+        then
+            break
+        else
+            echo failed to start fabric contract ${CONTRACT}
+            exit 1
+        fi
+    done
     rm -f request.json
     popd
 }

@@ -28,6 +28,7 @@ function exit_on_error {
             }')
 
         do_curl \
+		    -k \
             -X PUT \
             -H 'Content-Type: application/json' \
             -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
