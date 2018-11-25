@@ -117,7 +117,7 @@ function deploy_fabric_contract {
         if [[ "${OUTPUT}" != *"chaincode code"*"exists"* ]]
         then
             echo failed to install fabric contract ${CONTRACT}
-            exit 1
+            #exit 1
         fi
     fi
     cat << EOF > request.json
@@ -140,7 +140,7 @@ EOF
             break
         else
             echo failed to start fabric contract ${CONTRACT}
-            exit 1
+            #exit 1
         fi
     done
     rm -f request.json
