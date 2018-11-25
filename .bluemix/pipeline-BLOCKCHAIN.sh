@@ -28,8 +28,7 @@ function provision_blockchain {
 
 function get_blockchain_connection_profile_inner {
     do_curl \
-	    -k \
-        -H 'Content-Type: application/json' \
+	    -H 'Content-Type: application/json' \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/connection_profile > blockchain-connection-profile.json
@@ -60,8 +59,7 @@ function wait_for_peer_to_start {
 function start_blockchain_peer {
     PEER=$1
     do_curl \
-	    -k \
-        -X POST \
+	    -X POST \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/${PEER}/start
@@ -84,8 +82,7 @@ function wait_for_peer_to_stop {
 function stop_blockchain_peer {
     PEER=$1
     do_curl \
-	    -k \
-        -X POST \
+	    -X POST \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/${PEER}/stop
@@ -116,8 +113,7 @@ function upload_admin_cert {
 }
 EOF
     do_curl \
-	    -k \
-        -X POST \
+	    -X POST \
 		-H 'Content-Type: application/json' \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
@@ -131,8 +127,7 @@ EOF
 function sync_channel_certs {
     CHANNEL=$1
     do_curl \
-	    -k \
-        -X POST \
+	    -X POST \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/channels/${CHANNEL}/sync
@@ -175,8 +170,7 @@ function update_blockchain_deploy_status {
 }
 EOF
     do_curl \
-	    -k \
-        -X PUT \
+	    -X PUT \
         -H 'Content-Type: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         --data-binary @request.json \
