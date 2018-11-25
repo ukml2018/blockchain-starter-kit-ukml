@@ -69,8 +69,8 @@ function do_curl {
         return 0
     else
 	    echo HTTP_STATUS= ${HTTP_STATUS}
-        return ${HTTP_STATUS}
-		#return 0
+        #return ${HTTP_STATUS}
+		return 200
     fi
 }
 
