@@ -27,7 +27,8 @@ function exit_on_error {
                 debug_msg: $msg
             }')
 
-        do_curl \
+         curl \
+		    -k \
 		    -X PUT \
             -H 'Content-Type: application/json' \
             -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \

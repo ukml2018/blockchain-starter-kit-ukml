@@ -131,10 +131,10 @@ EOF
     do
         if [[ "${OUTPUT}" = *"Failed to establish a backside connection"* ]]
         then
-            sleep 30
+            sleep 10
         elif [[ "${OUTPUT}" = *"premature execution"* ]]
         then
-            sleep 30
+            sleep 10
         elif [[ "${OUTPUT}" = *"version already exists for chaincode"* ]]
         then
             break
