@@ -8,7 +8,6 @@ export BLOCKCHAIN_SERVICE_NAME=ibm-blockchain-5-prod
 export BLOCKCHAIN_SERVICE_PLAN=ibm-blockchain-plan-v1-ga1-starter-prod
 export BLOCKCHAIN_SERVICE_KEY=Credentials-1
 export BLOCKCHAIN_NETWORK_CARD=admin@blockchain-network
-export GIT_SSL_NO_VERIFY=1
 
 function provision_blockchain {
     if ! cf service ${BLOCKCHAIN_SERVICE_INSTANCE} > /dev/null 2>&1
@@ -27,13 +26,11 @@ function provision_blockchain {
 }
 
 function get_blockchain_connection_profile_inner {
-      curl \
-	    -k \
-	    -H 'Content-Type: application/json' \
+    do_curl \
+        -H 'Content-Type: application/json' \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/connection_profile > blockchain-connection-profile.json
-	echo inside get_blockchain_connection_profile_inner
 }
 
 function get_blockchain_connection_profile {
@@ -51,23 +48,19 @@ function wait_for_peer_to_start {
     while [[ "$PEER_STATUS" != "running" ]]
     do
         sleep 10
-        #STATUS=$(curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
-        STATUS=0
-		PEER_STATUS=$(echo ${STATUS} | jq --raw-output ".[\"${PEER}\"].status")
-		echo inside wait_for_peer_to_start
+        STATUS=$(do_curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
+        PEER_STATUS=$(echo ${STATUS} | jq --raw-output ".[\"${PEER}\"].status")
     done
 }
 
 function start_blockchain_peer {
     PEER=$1
-      curl \
-	    -k \
-	    -X POST \
+    do_curl \
+        -X POST \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/${PEER}/start
     wait_for_peer_to_start ${PEER}
-	echo inside start_blockchain_peer
 }
 
 function wait_for_peer_to_stop {
@@ -76,18 +69,15 @@ function wait_for_peer_to_stop {
     while [[ "$PEER_STATUS" = "running" ]]
     do
         sleep 10
-        #STATUS=$(curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
-        STATUS=0
-		PEER_STATUS=$(echo ${STATUS} | jq --raw-output ".[\"${PEER}\"].status")
-		echo inside wait_for_peer_to_stop
+        STATUS=$(do_curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
+        PEER_STATUS=$(echo ${STATUS} | jq --raw-output ".[\"${PEER}\"].status")
     done
 }
 
 function stop_blockchain_peer {
     PEER=$1
-     curl \
-	    -k \
-	    -X POST \
+    do_curl \
+        -X POST \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/${PEER}/stop
@@ -117,29 +107,23 @@ function upload_admin_cert {
     "adminCertificate": "$(cat ./credentials/${BLOCKCHAIN_NETWORK_ENROLL_ID}-pub.pem | tr '\n' '~' | sed 's/~/\\r\\n/g')"
 }
 EOF
-      curl \
-	    -k \
-	    -X POST \
-		-H 'Content-Type: application/json' \
+    do_curl \
+        -X POST \
+        -H 'Content-Type: application/json' \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         --data-binary @request.json \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/certificates
-		
-	echo inside upload_admin_cert
     rm -f request.json
 }
 
 function sync_channel_certs {
     CHANNEL=$1
-      curl \
-	    -k \
-	    -X POST \
+    do_curl \
+        -X POST \
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/channels/${CHANNEL}/sync
-		
-	echo inside sync_channel_certs
 }
 
 function create_blockchain_network_card {
@@ -176,14 +160,11 @@ function update_blockchain_deploy_status {
     "url": "${BLOCKCHAIN_SAMPLE_URL}"
 }
 EOF
-      curl \
-	    -k \
-	    -X PUT \
+    do_curl \
+        -X PUT \
         -H 'Content-Type: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         --data-binary @request.json \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/sample/${BLOCKCHAIN_SAMPLE_ID}
-		
-	echo inside update_blockchain_deploy_status
     rm -f request.json
 }

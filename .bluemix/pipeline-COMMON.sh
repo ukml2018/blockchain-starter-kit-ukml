@@ -27,16 +27,15 @@ function exit_on_error {
                 debug_msg: $msg
             }')
 
-         curl \
-		    -k \
-		    -X PUT \
+        do_curl \
+            -X PUT \
             -H 'Content-Type: application/json' \
             -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
             --data-binary "$request" \
             ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/sample/${BLOCKCHAIN_SAMPLE_ID}
     fi
 
-    #exit 1
+    exit 1
 }
 
 function install_nodejs {
@@ -61,16 +60,14 @@ function install_jq {
 }
 
 function do_curl {
-    export GIT_SSL_NO_VERIFY=1
     HTTP_RESPONSE=$(mktemp)
-    HTTP_STATUS=$(curl -w '%{http_code}' -o ${HTTP_RESPONSE} "$@")
+    HTTP_STATUS=$(curl -k -w '%{http_code}' -o ${HTTP_RESPONSE} "$@")
     cat ${HTTP_RESPONSE}
     rm -f ${HTTP_RESPONSE}
     if [[ ${HTTP_STATUS} -ge 200 && ${HTTP_STATUS} -lt 300 ]]
     then
         return 0
     else
-	    echo inside do_curl_function
         return ${HTTP_STATUS}
     fi
 }

@@ -50,7 +50,7 @@ function deploy_composer_contract {
             if [[ "${OUTPUT}" != *"already installed"* ]]
             then
                 echo failed to install composer contract ${CONTRACT}
-                #exit 1
+                exit 1
             fi
         fi
         while ! OUTPUT=$(composer network start -c ${BLOCKCHAIN_NETWORK_CARD} -n ${BUSINESS_NETWORK_NAME} -V ${BUSINESS_NETWORK_VERSION} -A ${BLOCKCHAIN_NETWORK_ENROLL_ID} -S ${BLOCKCHAIN_NETWORK_ENROLL_SECRET} -f adminCard.card 2>&1)
@@ -112,12 +112,12 @@ function deploy_fabric_contract {
     do
         CHAINCODE_FILE_OPTS="${CHAINCODE_FILE_OPTS} -F files[]=@${CHAINCODE_FILE}"
     done
-    if ! OUTPUT=$(curl -k -X POST -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${CHAINCODE_FILE_OPTS} -F chaincode_id=${CHAINCODE_ID} -F chaincode_version=${CHAINCODE_VERSION} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/chaincode/install)
+    if ! OUTPUT=$(do_curl -k -X POST -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${CHAINCODE_FILE_OPTS} -F chaincode_id=${CHAINCODE_ID} -F chaincode_version=${CHAINCODE_VERSION} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/chaincode/install)
     then
         if [[ "${OUTPUT}" != *"chaincode code"*"exists"* ]]
         then
             echo failed to install fabric contract ${CONTRACT}
-            #exit 1
+            exit 1
         fi
     fi
     cat << EOF > request.json
@@ -127,20 +127,20 @@ function deploy_fabric_contract {
     "chaincode_arguments": "[\"12345\"]"
 }
 EOF
-    while ! OUTPUT=$(curl -k -X POST -H 'Content-Type: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} --data-binary @request.json ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/channels/${CHANNEL}/chaincode/instantiate)
+    while ! OUTPUT=$(do_curl -k -X POST -H 'Content-Type: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} --data-binary @request.json ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/channels/${CHANNEL}/chaincode/instantiate)
     do
         if [[ "${OUTPUT}" = *"Failed to establish a backside connection"* ]]
         then
-            sleep 10
+            sleep 30
         elif [[ "${OUTPUT}" = *"premature execution"* ]]
         then
-            sleep 10
+            sleep 30
         elif [[ "${OUTPUT}" = *"version already exists for chaincode"* ]]
         then
             break
         else
             echo failed to start fabric contract ${CONTRACT}
-            #exit 1
+            exit 1
         fi
     done
     rm -f request.json
