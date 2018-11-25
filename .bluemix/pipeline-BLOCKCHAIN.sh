@@ -33,6 +33,7 @@ function get_blockchain_connection_profile_inner {
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/connection_profile > blockchain-connection-profile.json
+	echo inside get_blockchain_connection_profile_inner
 }
 
 function get_blockchain_connection_profile {
@@ -52,6 +53,7 @@ function wait_for_peer_to_start {
         sleep 10
         STATUS=$(do_curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
         PEER_STATUS=$(echo ${STATUS} | jq --raw-output ".[\"${PEER}\"].status")
+		echo inside wait_for_peer_to_start
     done
 }
 
@@ -64,6 +66,7 @@ function start_blockchain_peer {
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/${PEER}/start
     wait_for_peer_to_start ${PEER}
+	echo inside start_blockchain_peer
 }
 
 function wait_for_peer_to_stop {
@@ -74,6 +77,7 @@ function wait_for_peer_to_stop {
         sleep 10
         STATUS=$(do_curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
         PEER_STATUS=$(echo ${STATUS} | jq --raw-output ".[\"${PEER}\"].status")
+		echo inside wait_for_peer_to_stop
     done
 }
 
@@ -119,6 +123,8 @@ EOF
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         --data-binary @request.json \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/certificates
+		
+	echo inside upload_admin_cert
     rm -f request.json
 }
 
@@ -130,6 +136,8 @@ function sync_channel_certs {
         -H 'Accept: application/json' \
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/channels/${CHANNEL}/sync
+		
+	echo inside sync_channel_certs
 }
 
 function create_blockchain_network_card {
@@ -173,5 +181,7 @@ EOF
         -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} \
         --data-binary @request.json \
         ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/sample/${BLOCKCHAIN_SAMPLE_ID}
+		
+	echo inside update_blockchain_deploy_status
     rm -f request.json
 }

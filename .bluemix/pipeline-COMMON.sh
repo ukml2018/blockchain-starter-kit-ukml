@@ -36,7 +36,7 @@ function exit_on_error {
             ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/sample/${BLOCKCHAIN_SAMPLE_ID}
     fi
 
-    exit 1
+    #exit 1
 }
 
 function install_nodejs {
@@ -70,6 +70,7 @@ function do_curl {
     then
         return 0
     else
+	    echo inside do_curl_function
         return ${HTTP_STATUS}
     fi
 }
