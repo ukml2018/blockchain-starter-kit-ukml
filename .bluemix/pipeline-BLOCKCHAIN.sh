@@ -50,7 +50,7 @@ function wait_for_peer_to_start {
     while [[ "$PEER_STATUS" != "running" ]]
     do
         sleep 10
-        STATUS=$(do_curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
+        STATUS=$(curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
         PEER_STATUS=$(echo ${STATUS} | jq --raw-output ".[\"${PEER}\"].status")
 		echo inside wait_for_peer_to_start
     done
@@ -73,7 +73,7 @@ function wait_for_peer_to_stop {
     while [[ "$PEER_STATUS" = "running" ]]
     do
         sleep 10
-        STATUS=$(do_curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
+        STATUS=$(curl -k -H 'Accept: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/nodes/status)
         PEER_STATUS=$(echo ${STATUS} | jq --raw-output ".[\"${PEER}\"].status")
 		echo inside wait_for_peer_to_stop
     done

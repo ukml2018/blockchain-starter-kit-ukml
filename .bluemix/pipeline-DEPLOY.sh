@@ -112,7 +112,7 @@ function deploy_fabric_contract {
     do
         CHAINCODE_FILE_OPTS="${CHAINCODE_FILE_OPTS} -F files[]=@${CHAINCODE_FILE}"
     done
-    if ! OUTPUT=$(do_curl -k -X POST -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${CHAINCODE_FILE_OPTS} -F chaincode_id=${CHAINCODE_ID} -F chaincode_version=${CHAINCODE_VERSION} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/chaincode/install)
+    if ! OUTPUT=$(curl -k -X POST -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} ${CHAINCODE_FILE_OPTS} -F chaincode_id=${CHAINCODE_ID} -F chaincode_version=${CHAINCODE_VERSION} ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/chaincode/install)
     then
         if [[ "${OUTPUT}" != *"chaincode code"*"exists"* ]]
         then
@@ -127,7 +127,7 @@ function deploy_fabric_contract {
     "chaincode_arguments": "[\"12345\"]"
 }
 EOF
-    while ! OUTPUT=$(do_curl -k -X POST -H 'Content-Type: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} --data-binary @request.json ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/channels/${CHANNEL}/chaincode/instantiate)
+    while ! OUTPUT=$(curl -k -X POST -H 'Content-Type: application/json' -u ${BLOCKCHAIN_KEY}:${BLOCKCHAIN_SECRET} --data-binary @request.json ${BLOCKCHAIN_URL}/api/v1/networks/${BLOCKCHAIN_NETWORK_ID}/channels/${CHANNEL}/chaincode/instantiate)
     do
         if [[ "${OUTPUT}" = *"Failed to establish a backside connection"* ]]
         then
