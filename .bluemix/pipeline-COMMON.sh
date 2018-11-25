@@ -61,6 +61,7 @@ function install_jq {
 }
 
 function do_curl {
+    export GIT_SSL_NO_VERIFY=1
     HTTP_RESPONSE=$(mktemp)
     HTTP_STATUS=$(curl -w '%{http_code}' -o ${HTTP_RESPONSE} "$@")
     cat ${HTTP_RESPONSE}

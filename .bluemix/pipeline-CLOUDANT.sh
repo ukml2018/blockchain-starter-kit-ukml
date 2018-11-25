@@ -26,7 +26,7 @@ function provision_cloudant {
 function create_cloudant_database {
     if ! do_curl ${CLOUDANT_URL}/${CLOUDANT_DATABASE} > /dev/null 2>&1
     then
-        do_curl -k -X PUT ${CLOUDANT_URL}/${CLOUDANT_DATABASE}
+        do_curl -X PUT ${CLOUDANT_URL}/${CLOUDANT_DATABASE}
     fi
 }
 
